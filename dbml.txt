@@ -1,0 +1,189 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table user {
+  id integer [primary key]
+  username varchar(20)
+  role varchar()
+  password varchar(20)
+  created_at timestamp
+
+  Note: 'Store users data'
+}
+
+Table character{
+  id integer [primary key]
+  id_u integer [ref: > user.id]
+  name varchar
+  id_race varchar [ref: > race.id]
+  //It should be the sum of the select characterclass that contains the character's id (sum of all classes he possesses)
+  level integer
+  idalignment integer [ref: > alignment.id]
+  idbackground integer [ref: > background.id]
+  strength integer
+  dexterity integer
+  constitution integer
+  intelligence integer
+  wisdom integer
+  charism integer
+  //traits_character text [null]
+  //ideals text [null]
+  //flaws text  [null]
+}
+
+table characterclass{
+  id integer [primary key]
+  id_ch integer [ref: > character.id]
+  id_cl integer [ref: > class.id]
+  level integer [not null, default: '1']
+}
+
+Table spells_eng {
+  id integer [primary key]
+  name varchar(150) [not null,unique]
+  casting_time varchar(40)
+  components text
+  description text
+  duration varchar(40)
+  level integer(11)
+  distance varchar(40)
+  school varchar(40)
+  extension varchar(40)
+}
+
+
+Table alignment{
+  id integer [primary key]
+  name varchar [not null, note: 'CHECK constraint -> alignment = [lawful good,neutral good,chaotic good,lawful neutral,true neutral,chaotic neutral,lawwful evil,neutral evil,chaotic evil]']
+  description text [null]
+}
+
+
+//BACKGROUNDS
+//Should I make a table with special "features" of backgrounds ? For example the guild artisan must choose a guild business and the hermit a reason as to why he went into reclusion
+Table background{
+  id integer [primary key]
+  name varchar [not null]
+  description text [null]
+  nb_lang integer [default:'0',not null]
+  }
+
+Table backgroundfeature{
+  id integer [primary key]
+  id_b integer [ref:> background.id, not null]
+  name text [not null]
+  description text [null]
+}
+
+Table flaws{
+  id integer [primary key]
+  id_b integer [ref: > background.id, not null]
+  description text [null]
+}
+
+Table personalitytrait{
+  id integer [primary key]
+  id_b integer [ref: > background.id, not null]
+  description text [null]
+}
+
+Table ideal{
+  id integer [primary key]
+  id_b integer [ref: > background.id, not null]
+  description text [null]
+}
+
+Table bond{
+  id integer [primary key]
+  id_b integer [ref: > background.id, not null]
+  description text [null]
+
+}
+
+Table skills{
+  id integer [primary key]
+  id_ch integer [ref: > Characteristics.id, not null]
+  name varchar [not null, unique]
+  description text [null]
+}
+
+//May need to create second table with the type of tools and either create third table
+//or put in the tool waht type it is (I think second one is better)
+Table tools {
+  id integer [primary key]
+  name varchar [not null,unique]
+  cost integer [default:'0']
+  weight integer [default:'0']
+  description text [null]
+}
+
+
+Table backgroundskills{
+  id integer [primary key]
+  id_b integer [ref:> background.id, not null]
+  id_s integer [ref:> skills.id, not null]
+}
+//When the tools can be chosen, may need to hard code the selection to pull out from a table
+//linking the different tools with the type of tools it is
+Table backgroundtools{
+  id integer [primary key]
+  id_b integer [ref:> background.id, not null]
+  id_t integer [ref:>tools.id, not null]
+}
+
+Table Characteristics{
+  id integer [primary key]
+  name varchar [not null,unique, note:'Strength,Dexterity,Constitution,Intelligence,Wisdom,Charisma']
+  description text [null]
+}
+
+Table spellcasterspell{
+  id integer [primary key]
+  idspell integer [ref: > spells_eng.id, not null]
+  idclass integer [ref: > class.id, not null]
+  note varchar [null]
+
+}
+
+//A compléter. Format simple pour l'instant pour l'implémentation des FK
+Table class{
+  id integer [primary key]
+  name varchar [not null]
+}
+
+Table language{
+  id integer [primary key]
+  name varchar [not null, unique]
+  typical_speakers varchar [not null]
+  script varchar [not null]
+  standard bool [not null,default:True]
+}
+Table racelanguage{
+  id integer [primary key]
+  id_lang integer [ref:> language.id]
+  id_race integer [ref:> race.id]
+}
+Table racetraits{
+  id integer [primary key]
+  id_race integer [ref:> race.id]
+  description text
+}
+
+//I need to hardcode the ability increase in function of the races
+//I can hardcode the nightvision or just make a table with the description of some terms if needed
+Table race {
+  id integer [primary key]
+  name varchar [not null, unique]
+  speed integer [not null]
+  age_note varchar
+  idsize integer [ref:> size.id]
+  //Let's consider the distance at which the race can see in the dark so 0 for those that can't see
+  darkvision integer [default:'0',not null]
+}
+
+Table size{
+  id integer [primary key]
+  type varchar [unique]
+}
+
+

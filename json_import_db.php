@@ -14,7 +14,7 @@ $items = json_decode($jsonData, true);
 
 // Prepare the SQL statement
 if ($tablename=="spells_eng") {
-    $sql = "INSERT INTO spells_eng (id, name, casting_time, components, description, duration, level, distance,school) VALUES (DEFAULT,?,?,?,?,?,?,?,?)";
+    $sql = "INSERT INTO spells_eng (id, name, casting_time, components, description, duration, level, distance,school,extension) VALUES (DEFAULT,?,?,?,?,?,?,?,?,DEFAULT)";
     $stmt = mysqli_prepare($conn, $sql);
 
 // Iterate over each spell and insert it into the database
