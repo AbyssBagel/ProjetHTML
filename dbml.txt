@@ -1,5 +1,4 @@
-// Use DBML to define your database structure
-// Docs: https://dbml.dbdiagram.io/docs
+DBML File V0.4
 
 Table user {
   id integer [primary key]
@@ -15,20 +14,25 @@ Table character{
   id integer [primary key]
   id_u integer [ref: > user.id]
   name varchar
-  id_race varchar [ref: > race.id]
+  id_race integer [ref: > race.id,not null]
+  id_race_variant integer [ref:> racevariant.id,null,default:null]
+  sex varchar [not null,note:'male/female/custom']
   //It should be the sum of the select characterclass that contains the character's id (sum of all classes he possesses)
-  level integer
-  idalignment integer [ref: > alignment.id]
-  idbackground integer [ref: > background.id]
-  strength integer
-  dexterity integer
-  constitution integer
-  intelligence integer
-  wisdom integer
-  charism integer
-  //traits_character text [null]
-  //ideals text [null]
-  //flaws text  [null]
+  level integer //Is it needed since I can get it from the charclass table when I sum the entries I get from select * where id = charid ?
+  idalignment integer [ref: > alignment.id, not null]
+  idbackground integer [ref: > background.id, not null]
+  id_b_spe integer [ref: > backgroundspecialty.id,null]
+  id_b_variant integer [ref: > backgroundvariant.id,null,default:null]
+  id_b_bond integer [ref: > bond.id]
+  id_b_persotrait integer [ref: > personalitytrait.id]
+  id_b_flaw integer [ref: > flaw.id]
+  id_b_ideal integer [ref: > ideal.id]
+  strength integer [note:'constraint between 1-30']
+  dexterity integer [note:'constraint between 1-30']
+  constitution integer [note:'constraint between 1-30']
+  intelligence integer [note:'constraint between 1-30']
+  wisdom integer [note:'constraint between 1-30']
+  charism integer [note:'constraint between 1-30']
 }
 
 table characterclass{
@@ -38,6 +42,28 @@ table characterclass{
   level integer [not null, default: '1']
 }
 
+Table characterfeat{
+  id integer [primary key]
+  id_ch integer [ref: > character.id]
+  id_feat integer [ref: > feat.id]
+}
+
+Table characterskills{
+  id integer [primary key]
+  id_ch integer [ref: > character.id]
+  idskill integer [ref: > skills.id]
+}
+
+Table charactertools{
+  id integer [primary key]
+  id_ch integer [ref: > character.id]
+  idtool integer [ref: > tools.id]
+}
+Table characterproficiency{
+  id integer [primary key]
+  id_ch integer [ref: > character.id]
+  idproficiency integer [ref: > proficiency.id]
+}
 Table spells_eng {
   id integer [primary key]
   name varchar(150) [not null,unique]
@@ -60,42 +86,60 @@ Table alignment{
 
 
 //BACKGROUNDS
-//Should I make a table with special "features" of backgrounds ? For example the guild artisan must choose a guild business and the hermit a reason as to why he went into reclusion
+//Should I make a table with special "features" of backgrounds ?
+//For example the guild artisan must choose a guild business
+//and the hermit a reason as to why he went into reclusion
 Table background{
   id integer [primary key]
-  name varchar [not null]
+  name varchar [not null, unique]
+  specialtyname varchar [null]
   description text [null]
+  featurename varchar [not null]
+  featuredescription text
+  //Shouldn't I hardcode that as well on the backend/frontend ?
   nb_lang integer [default:'0',not null]
+  //Is it really needed ?
+  equipment text [null]
   }
 
-Table backgroundfeature{
+Table backgroundvariant{
   id integer [primary key]
-  id_b integer [ref:> background.id, not null]
-  name text [not null]
+  id_b integer [not null, ref:> background.id]
+  name varchar [not null, unique]
   description text [null]
 }
 
-Table flaws{
+Table backgroundspecialty {
+  id integer [primary key]
+  id_b integer [ref:> background.id]
+  description varchar [unique]
+}
+
+Table flaw{
   id integer [primary key]
   id_b integer [ref: > background.id, not null]
+  name varchar [not null, unique]
   description text [null]
 }
 
 Table personalitytrait{
   id integer [primary key]
   id_b integer [ref: > background.id, not null]
+  name varchar [not null, unique]
   description text [null]
 }
 
 Table ideal{
   id integer [primary key]
   id_b integer [ref: > background.id, not null]
+  name varchar [not null, unique]
   description text [null]
 }
 
 Table bond{
   id integer [primary key]
   id_b integer [ref: > background.id, not null]
+  name varchar [not null, unique]
   description text [null]
 
 }
@@ -122,6 +166,7 @@ Table backgroundskills{
   id integer [primary key]
   id_b integer [ref:> background.id, not null]
   id_s integer [ref:> skills.id, not null]
+  note:'Should I just drop this table and make it a back end feature to get the skills from the choice and then complete a character/skills table ?'
 }
 //When the tools can be chosen, may need to hard code the selection to pull out from a table
 //linking the different tools with the type of tools it is
@@ -129,6 +174,7 @@ Table backgroundtools{
   id integer [primary key]
   id_b integer [ref:> background.id, not null]
   id_t integer [ref:>tools.id, not null]
+  note:'Should I just drop this table and make it a back end feature to get the skills from the choice and then complete a character/tools table ?'
 }
 
 Table Characteristics{
@@ -142,13 +188,52 @@ Table spellcasterspell{
   idspell integer [ref: > spells_eng.id, not null]
   idclass integer [ref: > class.id, not null]
   note varchar [null]
-
 }
 
 //A compléter. Format simple pour l'instant pour l'implémentation des FK
 Table class{
   id integer [primary key]
   name varchar [not null]
+  hitdie integer [not null]
+  idprimaryability1 integer [not null,ref:> Characteristics.id]
+  idprimaryability2 integer [null,ref:> Characteristics.id]
+  idsavingthrowproficiency1 integer [ref:> Characteristics.id]
+  idsavingthrowproficiency2 integer [ref:> Characteristics.id]
+  nbskills integer [not null]
+}
+
+//Problem for classes like bard that an choose from multiple
+//Maybe I can do a bool chose tools in class to check if it is the case, if yes then I need the number somewhere and then can retrieve every tools from the classtools table and if no chose then I just retrieve everything linked to the class in the classtools table.
+Table classtools{
+  id integer [primary key]
+  idclass integer [ref:>class.id]
+  idtool integer [ref:>tools.id]
+}
+
+//Ajouter idclass foreign key ?
+Table classfeature{
+  id integer [primary key]
+  idclass integer [ref:> class.id]
+  name varchar [not null]
+  description text
+}
+
+Table classskills{
+  id integer [primary key]
+  idclass integer [ref:>class.id]
+  idskill integer [ref:> skills.id]
+}
+//Je vais devoir requête l'id de la proficiency first
+//à partir du nom de la proficiency pour ensuite l'update dans cette Table avec le bon id
+Table classproficiency{
+  id integer [primary key]
+  idclass integer [ref:> class.id]
+  idproficiency integer [ref:> proficiency.id]
+}
+
+Table proficiency{
+  id integer [primary key]
+  name varchar [not null,unique]
 }
 
 Table language{
@@ -158,22 +243,16 @@ Table language{
   script varchar [not null]
   standard bool [not null,default:True]
 }
-Table racelanguage{
-  id integer [primary key]
-  id_lang integer [ref:> language.id]
-  id_race integer [ref:> race.id]
-}
-Table racetraits{
-  id integer [primary key]
-  id_race integer [ref:> race.id]
-  description text
-}
+
+
+
 
 //I need to hardcode the ability increase in function of the races
 //I can hardcode the nightvision or just make a table with the description of some terms if needed
 Table race {
   id integer [primary key]
   name varchar [not null, unique]
+  description text
   speed integer [not null]
   age_note varchar
   idsize integer [ref:> size.id]
@@ -181,9 +260,40 @@ Table race {
   darkvision integer [default:'0',not null]
 }
 
+Table racelanguage{
+  id integer [primary key]
+  id_lang integer [ref:> language.id]
+  id_race integer [ref:> race.id]
+}
+
+//We'll need to be very attentive to those traits and how they influence the stats / character sheet. They are just in the database to know after what they have but we could maybe just make without and hard code theml since the only real "choice" is the race.
+Table racetraits{
+  id integer [primary key]
+  id_race integer [ref:> race.id]
+  description text
+}
+Table racevariant {
+  id integer [primary key]
+  id_race integer [ref:>race.id]
+  name varchar [not null]
+  description text
+}
+Table racevarianttraits{
+  id integer [primary key]
+  id_racevariant integer [ref:>racevariant.id]
+  name varchar [not null]
+  description text
+}
 Table size{
   id integer [primary key]
   type varchar [unique]
+}
+
+Table feat{
+  id integer [primary key]
+  name varchar [not null, unique]
+  prerequisite varchar [null]
+  description text [not null]
 }
 
 
