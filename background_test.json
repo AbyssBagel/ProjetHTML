@@ -1,0 +1,9 @@
+{"Example_item":{
+    "specialtyname": "Example Specialty",
+    "description": "This is an example description.",
+    "featurename": "Example Feature",
+    "featuredescription": "This is an example feature description.",
+    "nb_lang": 5,
+    "equipment": "Example Equipment"
+  }
+}

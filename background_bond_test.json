@@ -1,0 +1,9 @@
+{"Example_bond":{
+    "backgroundname": "Example_item",
+    "description": "This is an example description."
+  },
+  "Example_bond2":{
+    "backgroundname": "Example_item",
+    "description": "This is an example description for the 2nd bond."
+  }
+}

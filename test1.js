@@ -1,5 +1,5 @@
-SpellJsonFile='spells.json';
-SpellTableName='spells_eng';
+SpellJsonFile='background_bond_test.json';
+SpellTableName='bond';
 
 function FetchSpells(jsonfilename,tablename) {
     console.log(jsonfilename);
@@ -7,7 +7,7 @@ function FetchSpells(jsonfilename,tablename) {
     const formData = new FormData();
     formData.append('jsonfilename', jsonfilename);
     formData.append('tablename', tablename);
-    fetch('json_import_db.php', {
+    fetch('php/json_import_db.php', {
       method: 'POST',
       body: formData
     })

@@ -1,20 +1,5 @@
 <?php
-
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {// Include the file to establish database connection
-require_once 'connect_to_database.php';
-$jsonfilename = $_POST['jsonfilename'];
-$tablename = $_POST['tablename'];
-
-// Read the contents of the spells.json file
-$jsonData = file_get_contents($jsonfilename);
-
-// Convert the JSON data to an associative array
-$items = json_decode($jsonData, true);
-
-// Prepare the SQL statement
-if ($tablename=="spells_eng") {
-    $sql = "INSERT INTO spells_eng (id, name, casting_time, components, description, duration, level, distance,school,extension) VALUES (DEFAULT,?,?,?,?,?,?,?,?,DEFAULT)";
+$sql = "INSERT INTO spells_eng (id, name, casting_time, components, description, duration, level, distance,school,extension) VALUES (DEFAULT,?,?,?,?,?,?,?,?,DEFAULT)";
     $stmt = mysqli_prepare($conn, $sql);
 
 // Iterate over each spell and insert it into the database
@@ -41,9 +26,3 @@ foreach ($items as $itemname => $itemdata) {
 }
 // Close the prepared statement
 mysqli_stmt_close($stmt);
-}
-
-// Close the database connection
-mysqli_close($conn);
-}
-

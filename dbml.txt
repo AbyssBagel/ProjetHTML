@@ -1,4 +1,5 @@
-DBML File V0.4
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
 
 Table user {
   id integer [primary key]
@@ -19,6 +20,9 @@ Table character{
   sex varchar [not null,note:'male/female/custom']
   //It should be the sum of the select characterclass that contains the character's id (sum of all classes he possesses)
   level integer //Is it needed since I can get it from the charclass table when I sum the entries I get from select * where id = charid ?
+  inspiration bool [not null,default:false]
+  jdssuccess integer [not null,default:0]
+  jdsfail integer [not null,default:0]
   idalignment integer [ref: > alignment.id, not null]
   idbackground integer [ref: > background.id, not null]
   id_b_spe integer [ref: > backgroundspecialty.id,null]
@@ -64,6 +68,13 @@ Table characterproficiency{
   id_ch integer [ref: > character.id]
   idproficiency integer [ref: > proficiency.id]
 }
+
+Table characterlanguage {
+  id integer [primary key]
+  id_ch integer [ref:> character.id]
+  idlang integer [ref:> language.id]
+}
+
 Table spells_eng {
   id integer [primary key]
   name varchar(150) [not null,unique]
@@ -199,7 +210,7 @@ Table class{
   idprimaryability2 integer [null,ref:> Characteristics.id]
   idsavingthrowproficiency1 integer [ref:> Characteristics.id]
   idsavingthrowproficiency2 integer [ref:> Characteristics.id]
-  nbskills integer [not null]
+  nbskills integer [not null] //?
 }
 
 //Problem for classes like bard that an choose from multiple
@@ -254,7 +265,7 @@ Table race {
   name varchar [not null, unique]
   description text
   speed integer [not null]
-  age_note varchar
+  age_note varchar // maybe retirer
   idsize integer [ref:> size.id]
   //Let's consider the distance at which the race can see in the dark so 0 for those that can't see
   darkvision integer [default:'0',not null]
@@ -281,9 +292,12 @@ Table racevariant {
 Table racevarianttraits{
   id integer [primary key]
   id_racevariant integer [ref:>racevariant.id]
+  id_racetraits integer [null]
   name varchar [not null]
   description text
+  
 }
+
 Table size{
   id integer [primary key]
   type varchar [unique]
@@ -295,5 +309,4 @@ Table feat{
   prerequisite varchar [null]
   description text [not null]
 }
-
 
