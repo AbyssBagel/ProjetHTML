@@ -1,11 +1,10 @@
-// Use DBML to define your database structure
-// Docs: https://dbml.dbdiagram.io/docs
+// V0.5
+
 
 Table user {
   id integer [primary key]
   username varchar(20)
-  role varchar()
-  password varchar(20)
+  password varchar(255)
   created_at timestamp
 
   Note: 'Store users data'
