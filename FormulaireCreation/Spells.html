@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Formulaire Création Perso</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+
+  <form action="Spells.php" method="post">
+    Choices of spells: <br>
+    <input type="checkbox" id="acidSplash" name="spell[]" value="acidSplash">
+    <label for="acidSplash">Acid Splash</label><br>
+
+    <input type="checkbox" id="sanctuary" name="spell[]" value="sanctuary">
+    <label for="sanctuary">Sanctuary</label><br> <br>
+
+    <a href="Looks.html">
+    <button type="button" onclick="document.forms[0].submit()">Next</button>
+    </a>
+  </form>
+  <script src="script.js"></script>
+</body>
+
+</html>

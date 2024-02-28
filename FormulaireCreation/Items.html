@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Formulaire Création Perso</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+
+  <form action="Items.php" method="post">
+    Choices of items in your inventory: <br>
+    <input type="checkbox" id="dagger" name="item" value="dagger">
+    <label for="dagger">Dagger</label><br>
+
+    <input type="checkbox" id="arcaneFocus" name="item" value="arcaneFocus">
+    <label for="arcaneFocus">Arcane Focus</label><br>
+
+    Your amount of gold: <br>
+    <p id="goldAmount">Gold Amount: </p>
+    <button type="button" id="randomizeGold">Randomize Gold</button>
+    <br> <br>
+
+    <a href="Spells.html">
+    <button type="button" onclick="document.forms[0].submit()">Next</button>
+    </a>
+  </form>
+  <script src="script.js"></script>
+</body>
+
+</html>

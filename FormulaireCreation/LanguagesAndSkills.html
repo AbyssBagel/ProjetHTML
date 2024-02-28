@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Formulaire Création Perso</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+
+  <form action="LanguagesAndSkills.php" method="post">
+    Languages your character knows: <br> 
+    <!-- Autocheck ce qui est connu et indiquer pourquoi (historique, race ...) -->
+    <input type="checkbox" id="common" name="language" value="common">
+    <label for="common">Common</label><br>
+
+    <input type="checkbox" id="infernal" name="language" value="infernal">
+    <label for="infernal">Infernal</label><br>
+
+    Skills your character is proficient in: <br>
+    <input type="checkbox" id="acrobatics" name="skill" value="acrobatics">
+    <label for="acrobatics">Acrobatics</label><br>
+    <input type="checkbox" id="animalHandling" name="skill" value="animalHandling">
+    <label for="animalHandling">Animal Handling</label><br>
+
+    <a href="Items.html">
+    <button type="button" onclick="document.forms[0].submit()">Next</button>
+    </a>
+  </form>
+  <script src="script.js"></script>
+</body>
+
+</html>

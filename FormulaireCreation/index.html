@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Formulaire Création Perso</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+
+    <form action="index.php" method="post">
+      <!-- Demande à la BDD de la liste des races -->
+        <select name="race" id="race">
+          <option value="elfe">Elfe</option>
+          <option value="halfeling">Halfelin</option>
+        </select>
+    <!-- Infos de la race actuellement selectionnée en dessous -->
+    
+        <a href="Classe.html">
+        <button type="button" onclick="document.forms[0].submit()">Next</button>
+        </a>
+    </form>
+  <script src="script.js"></script>
+</body>
+
+</html>
